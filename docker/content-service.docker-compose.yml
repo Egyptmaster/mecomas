@@ -1,0 +1,6 @@
+version: '3'
+services:
+  content-service:
+    build:
+      context: ./..
+      dockerfile: ./docker/content-service.dockerfile
