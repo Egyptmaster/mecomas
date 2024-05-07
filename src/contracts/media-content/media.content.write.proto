@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "src/contracts/media-content/media.content.common.proto";
+
+package contracts.media_content;
+
+service ModifyMediaContent {
+  // UploadLink allows to request a temporary direct upload link for a media content
+  rpc UploadLink(UploadRequest) returns (stream UploadLink){}
+  // AddOrUpdate allows to either add a new item or modify an existing item
+  rpc AddOrUpdate(UploadItem) returns (IdResponse) {}
+  // LikeOrDislike allows to either add a like or a dislike to a concrete media item
+  rpc LikeOrDislike(LikeOrDislike) returns (IdResponse){}
+  // AddComment allows to add a comment to a concrete media item
+  rpc AddComment(WriteComment) returns (IdResponse){}
+}
+
+message IdResponse {
+  // the unique identifier of the created or modified item
+  string id = 1;
+}
+
+message UploadLink {
+  // the unique identifier of the corresponding media item
+  string id = 1;
+  // the upload link requested
+  string url = 2;
+}
+
+message WriteComment {
+ // the media id the comment is about
+  string media_id = 1;
+  // the id of the user which creates the comment
+  string user_id = 2;
+  // the text of the comment
+  string text = 3;
+}
+
+message LikeOrDislike {
+  // the media id the like is for
+  string media_id = 1;
+  // the id of the user which added the like to media content
+  string user_id = 2;
+  // boolean flag indicates if that is a like or dislike
+  bool is_like = 3;
+}
+
+message UploadRequest{
+  // the user id of the owner
+  string owner_id = 1;
+}
+
+message UploadItem {
+  // the unique identifier of the media item
+  string id = 1;
+  // the content type of the media
+  string content_type = 2;
+  // the description set by the user while upload
+  string description = 3;
+  // a list of tags for the given media
+  repeated string tags = 4;
+  // the user id of the owner
+  string owner_id = 5;
+  // the visibility of the item
+  ItemVisibility visibility = 6;
+}
