@@ -1,23 +1,24 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
 import "src/contracts/media-content/media.content.common.proto";
+
+option go_package = "content-service/api/contract";
 
 package contracts.media_content;
 
 service QueryMediaContent {
   // List returns all media items ordered by their upload time which matching the given filter criteria
-  rpc List(ListMediaRequest) returns (stream MediaListItem){}
+  rpc MediaItems(ListMediaRequest) returns (stream MediaListItem){}
   // View returns a concrete media item for the given id
-  rpc View(IdRequest) returns (MediaItem){}
-  // Like returns the detailed information of a concrete like/dislike
-  rpc Like(IdRequest) returns (LikeOrDislike){}
-  // Likes returns a detailed list of all likes and dislikes ordered by time given for the specific media item
-  rpc Likes(ListLikesRequest) returns (stream LikeOrDislike){}
+  rpc MediaItem(Id) returns (MediaItemDetails){}
+  // Like returns the detailed information of a concrete like
+  rpc Like(Id) returns (LikeDetails){}
+  // Likes returns a detailed list of all likes ordered by time given for the specific media item
+  rpc Likes(ListLikesRequest) returns (stream LikeDetails){}
   // Comment returns the detailed list of a concrete comment
-  rpc Comment(IdRequest) returns (Comment){}
+  rpc Comment(Id) returns (CommentDetails){}
   // Comments returns a detailed list of all comments ordered by time given for the specific media item
-  rpc Comments(ListCommentsRequest) returns (stream Comment){}
+  rpc Comments(ListCommentsRequest) returns (stream CommentDetails){}
 }
 
 message Paging {
@@ -36,11 +37,6 @@ message AnchorInfo {
   string next = 3;
   // the amount of items after the current one
   uint64 items_after = 4;
-}
-
-message IdRequest {
-  // the unique identifier of the item
-  string id = 1;
 }
 
 message ListCommentsRequest {
@@ -70,11 +66,11 @@ message ContentQuery {
   // an optional list of tags to filter for specific media content items
   repeated string tags = 1;
   // an optional start date to filter for media content uploaded after the given date
-  optional google.protobuf.Timestamp start_date = 2;
+  optional uint64 start_date = 2;
   // an optional end date to filter for media content uploaded before the given date
-  optional google.protobuf.Timestamp end_date = 3;
+  optional TimestampUnix end_date = 3;
   // an optional text used via full-text search to filter for specific media content by their descriptions
-  optional string search_term = 4;
+  optional TimestampUnix search_term = 4;
   // an optional user id to filter for media content of a concrete user
   optional string user_id = 5;
   // an optional filter for visibility of a media content
@@ -90,14 +86,14 @@ enum MediaItemKind {
 
 message MediaListItem {
   // the media item itself
-  MediaItem item = 1;
+  MediaItemDetails item = 1;
   // when requested the socials contains all relevant social media numbers about the item
   optional MediaItemSocials socials = 2;
   // the anchor information if you want to start from this item
   optional AnchorInfo anchor = 3;
 }
 
-message MediaItem {
+message MediaItemDetails {
   // the unique identifier of the media item
   string id = 1;
   // the url to access the concrete media on content storage directly - this is usually a temporary link
@@ -115,9 +111,9 @@ message MediaItem {
   // the thumbnail url
   string thumbnail_url = 8;
   // the timestamp the media was created
-  optional google.protobuf.Timestamp uploaded_at = 9;
+  optional TimestampUnix uploaded_at = 9;
   // the timestamp the media was modified
-  optional google.protobuf.Timestamp last_modified_at = 10;
+  optional TimestampUnix last_modified_at = 10;
   // the visibility of the media item
   ItemVisibility visibility = 11;
   // the version of the media item
@@ -129,18 +125,14 @@ message MediaItemSocials {
   // the amount of likes given in total for the corresponding media item
   uint64 likes = 1;
   // a timestamp representing the time the last like was given
-  optional google.protobuf.Timestamp last_like = 2;
-  // the amount of dislikes given in total for the corresponding media item
-  uint64 dislikes = 3;
-  // a timestamp representing the time the last dislike was given
-  optional google.protobuf.Timestamp last_dislike = 4;
+  optional TimestampUnix last_like = 2;
   // the amount of comments given in total for the corresponding media item
-  uint64 comments = 5;
+  uint64 comments = 3;
   // a timestamp representing the time the last comment was given
-  optional google.protobuf.Timestamp last_comment = 6;
+  optional TimestampUnix last_comment = 4;
 }
 
-message Comment {
+message CommentDetails {
   // the unique identifier of the comment itself
   string id = 1;
  // the media id the comment is about
@@ -150,38 +142,16 @@ message Comment {
   // the text of the comment
   string text = 4;
   // the timestamp the comment was created
-  optional google.protobuf.Timestamp created_at = 5;
+  optional TimestampUnix created_at = 5;
 }
 
-message LikeOrDislike {
+message LikeDetails {
   // the unique identifier of the like itself
   string id = 1;
   // the media id the like is for
   string media_id = 2;
   // the id of the user which added the like to media content
   string user_id = 3;
-  // boolean flag indicates if that is a like or dislike
-  bool is_like = 4;
-  // the timestamp the like/dislike was given
-  optional google.protobuf.Timestamp created_at = 5;
-}
-
-
-
-message UploadRequest{
-  // the user id of the owner
-  string owner_id = 1;
-}
-
-message UploadItem {
-  // the unique identifier of the media item
-  string id = 1;
-  // the content type of the media
-  string content_type = 2;
-  // the description set by the user while upload
-  string description = 3;
-  // a list of tags for the given media
-  repeated string tags = 4;
-  // the user id of the owner
-  string owner_id = 5;
+  // the timestamp the like was given
+  optional TimestampUnix created_at = 4;
 }
