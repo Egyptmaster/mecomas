@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+option go_package = "cid.com/feed-service";
+
+import "google/protobuf/timestamp.proto";
+
+package contracts.feed_content;
+
+service FeedContent {
+  // Feed returns the feed for the specific user ordered by their upload time
+  rpc Feed(FeedContentRequest) returns (FeedContentResponse) {}
+}
+
+message FeedContentRequest {
+  repeated string tags = 1;
+
+  string user_id = 2;
+
+  Paging paging = 3;
+}
+
+message FeedContentResponse {
+  repeated MediaItem media_items = 1;
+
+  repeated Notification notifications = 2;
+}
+
+message Paging {
+  optional string anchor = 1;
+
+  optional uint32 limit = 2;
+}
+
+// an enumeration about the different kind of media items the service supports
+enum MediaItemKind {
+  KIND_UNSPECIFIED = 0;
+  KIND_IMAGES = 1;
+  KIND_VIDEO = 2;
+}
+
+enum ItemVisibility {
+  VISIBILITY_UNSPECIFIED = 0;
+  VISIBILITY_PRIVATE = 1;
+  VISIBILITY_PUBLIC = 2;
+}
+
+message MediaItem {
+  // the unique identifier of the media item
+  string id = 1;
+  // the url to access the concrete media on content storage directly - this is usually a temporary link
+  string url = 2;
+  // the kind of item
+  MediaItemKind kind = 3;
+  // the content type of the media
+  string content_type = 4;
+  // the description set by the user while upload
+  string description = 5;
+  // a list of tags for the given media
+  repeated string tags = 6;
+  // the user id of the owner
+  string owner_id = 7;
+  // the thumbnail url
+  string thumbnail_url = 8;
+  // the timestamp the media was created
+  optional google.protobuf.Timestamp uploaded_at = 9;
+  // the timestamp the media was modified
+  optional google.protobuf.Timestamp last_modified_at = 10;
+  // the visibility of the media item
+  ItemVisibility visibility = 11;
+  // the version of the media item
+  uint64 Version = 12;
+
+}
+
+// an enumeration about the different kind of notifications supported
+enum NotificationKind {
+  KIND_COMMENT = 0;
+  KIND_FOLLOWER = 1;
+  KIND_LIKE = 2;
+}
+
+message Data {
+  string user_id = 1;
+
+  google.protobuf.Timestamp timestamp = 2;
+}
+
+message Notification {
+  NotificationKind kind = 1;
+
+  Data data = 2;
+}
