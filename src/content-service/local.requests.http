@@ -1,0 +1,2 @@
+### ModifyMediaContent/GeneratePreSignedUrl
+GRPC localhost:3000/contracts.media_content.ModifyMediaContent/GeneratePreSignedUrl

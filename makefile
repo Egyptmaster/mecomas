@@ -5,7 +5,7 @@ build-cs:
 	go build -o publish/$(cs_name) ./src/$(cs_name)
 
 run-cs:
-	go run ./src/$(cs_name) ./settings/$(cs_name).settings.yml
+	go run ./src/$(cs_name) ./settings/$(cs_name).settings.yml ./settings/$(cs_name).secrets.yml
 
 docker-cs:
 	docker build -f .\docker\$(cs_name).dockerfile .

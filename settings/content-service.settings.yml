@@ -1,5 +1,11 @@
 listen:
   grpc: ":3000"
   http: ":8888"
+fileStorage:
+  url: "http://localhost:9000"
+  bucket: "mecomas-media"
+  expire: "15m"
+  retry: 1
+  delay: "1s"
 contentStorage:
 

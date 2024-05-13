@@ -7,9 +7,9 @@ option go_package = "content-service/api/contract";
 package contracts.media_content;
 
 service QueryMediaContent {
-  // List returns all media items ordered by their upload time which matching the given filter criteria
+  // MediaItems lists all media items ordered by their upload time which matching the given filter criteria
   rpc MediaItems(ListMediaRequest) returns (stream MediaListItem){}
-  // View returns a concrete media item for the given id
+  // MediaItem returns a concrete media item for the given id
   rpc MediaItem(Id) returns (MediaItemDetails){}
   // Like returns the detailed information of a concrete like
   rpc Like(Id) returns (LikeDetails){}

@@ -6,7 +6,7 @@ option go_package = "content-service/api/contract";
 package contracts.media_content;
 
 service ModifyMediaContent {
-  // UploadLink allows to request a temporary direct upload link for a media content
+  // GeneratePreSignedUrl allows to request a temporary direct upload link for a media content
   rpc GeneratePreSignedUrl(Id) returns (PreSignedUrl){}
 
   // AddOrUpdateMediaItem allows to either add a new item or modify an existing item

@@ -3,6 +3,8 @@ module cid.com/content-service
 go 1.22
 
 require (
+	github.com/aws/aws-sdk-go v1.53.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	golang.org/x/net v0.21.0 // indirect
