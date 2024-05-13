@@ -1,0 +1,10 @@
+version: '3'
+services:
+  scylla:
+    image: 'scylladb/scylla'
+    command: "--api-address 0.0.0.0"
+    ports:
+      - "10000:10000"   #Rest
+      - "9180:9180"     #Prometheus
+      - "7199:7199"     #JMX
+      - "9042:9042"     #CQL

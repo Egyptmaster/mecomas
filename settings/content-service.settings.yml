@@ -1,0 +1,5 @@
+listen:
+  grpc: ":3000"
+  http: ":8888"
+contentStorage:
+
