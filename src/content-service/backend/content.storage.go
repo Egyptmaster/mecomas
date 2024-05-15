@@ -3,11 +3,14 @@ package backend
 import (
 	"context"
 	"errors"
+	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
 	"log/slog"
 	"time"
 )
 
 type ContentStorageConfiguration struct {
+	Hosts []string
 }
 
 type ContentStorage interface {
@@ -16,6 +19,13 @@ type ContentStorage interface {
 
 func NewContentStorage(cfg ContentStorageConfiguration) (ContentStorage, error) {
 	slog.Info("establishing connection to content storage")
+	// Create gocql cluster.
+	cluster := gocql.NewCluster(cfg.Hosts...)
+	// Wrap session on creation, gocqlx session embeds gocql.Session pointer.
+	session, err := gocqlx.WrapSession(cluster.CreateSession())
+	if err != nil {
+		t.Fatal(err)
+	}
 	return &contentStorage{}, nil
 }
 
